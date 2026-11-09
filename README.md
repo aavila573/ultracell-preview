@@ -81,6 +81,52 @@ Para cambiar estos datos, editar `index.html` directamente.
 - Checkout envía el resumen del carrito por WhatsApp al número de UltraCell con mensaje prellenado.
 - Precios de demostración (COP). Badges de oferta, novedad y más vendidos.
 
+## Ficha de producto: galería, lightbox y selector de colores
+
+La ficha de producto (`#/producto/:id`) tiene una galería de 4 vistas por producto
+(frontal, trasera, lateral y detalle de cámaras), un lightbox con navegación y un
+selector de colores con círculos y nombre visible.
+
+### Vistas disponibles
+
+Definidas en `GALLERY_VIEWS` (`index.html`): `front`, `back`, `side`, `camera`.
+Los productos tipo teléfono muestran las 4; el resto solo `front` y `back`.
+
+### Imágenes reales por color/vista (pendientes del cliente)
+
+El render actual es **SVG paramétrico por color** (no requiere imágenes externas).
+Cuando UltraCell entregue las fotos reales, se activan con esta nomenclatura:
+
+```
+assets/catalogo/<modelo>-<color>-<vista>.webp
+```
+
+- `<modelo>`: nombre del producto normalizado (ej. `iphone-16-pro-max`).
+- `<color>`: color normalizado (ej. `titanio-azul`).
+- `<vista>`: `front` | `back` | `side` | `camera`.
+
+La lista exacta de archivos necesarios está en
+`imagenes_pendientes.txt` (412 archivos, 22 modelos × sus colores × 4 vistas).
+
+### Cómo activar una imagen real
+
+1. Copiar el `.webp` en `assets/catalogo/` con el nombre exacto de la convención.
+2. Registrarlo en el manifiesto `IMAGE_MANIFEST` (un `Set` en `index.html`):
+
+```js
+IMAGE_MANIFEST.add('assets/catalogo/iphone-16-titanio-azul-front.webp');
+```
+
+Mientras un archivo **no** esté en el manifiesto, la vista usa el SVG paramétrico
+(sin peticiones 404 ni errores de consola). El lightbox reutiliza el mismo recurso
+original (no hace zoom CSS pixelado).
+
+### Selector de colores
+
+Derivado de `colors[]` + `PAL` (sin duplicar productos). Al cambiar de color se
+actualizan la imagen principal y las miniaturas; el precio, la capacidad y la
+disponibilidad no cambian.
+
 ## Integraciones
 
 ### WhatsApp
