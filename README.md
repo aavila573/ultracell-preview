@@ -1,10 +1,10 @@
-# UltraCell — Sitio web (demo)
+# UltraCell — Sitio web
 
-SPA de una sola página para UltraCell, almacén de celulares nuevos y usados en Barranquilla, Colombia. Clon de la demo Juls adaptado a la marca UltraCell con catálogo de productos, carrito, checkout por WhatsApp, asesor IA integrado y notas de demostración.
+SPA de una sola página para UltraCell, almacén de celulares nuevos y usados en Barranquilla, Colombia. Clon de la demo Juls adaptado a la marca UltraCell con catálogo de productos, carrito, checkout por WhatsApp, asesor IA integrado y catálogo real de equipos usados.
 
 ## Qué hace
 
-- Catálogo de 32 productos iPhone (nuevos y usados, múltiples capacidades y colores).
+- Catálogo de 35 equipos usados (34 iPhone + 1 iPad, múltiples capacidades y colores).
 - Carrito de compras con checkout que envía el resumen por WhatsApp a UltraCell.
 - Asesor IA con reglas locales (recomendador por presupuesto, comparador, dudas frecuentes).
 - Sección "Nosotros" con historia basada en datos reales del brief.
@@ -29,7 +29,7 @@ ultracell-site/
 └── assets/
     ├── logo.jpeg               # Logo de UltraCell (1280×1280)
     ├── foto_local.png          # Foto del local (1200×480)
-    └── catalogo/               # Imágenes de productos (22 archivos .jpg)
+    └── catalogo/               # Imágenes de productos (22 archivos .jpg + .png)
         ├── iphone-11.jpg
         ├── iphone-12.jpg
         ├── ...
@@ -76,10 +76,10 @@ Para cambiar estos datos, editar `index.html` directamente.
 
 ## Catálogo y carrito
 
-- 32 productos iPhone en el catálogo (array `CATALOG` en `index.html`), desde iPhone 11 hasta iPhone 17 Pro Max.
+- 35 equipos usados en el catálogo (array `CATALOG` en `index.html`): iPhone 11 a 17 Pro Max + iPad 8.ª generación.
 - Carrito en memoria (sin persistencia): agregar, quitar, ajustar cantidades.
 - Checkout envía el resumen del carrito por WhatsApp al número de UltraCell con mensaje prellenado.
-- Precios de demostración (COP). Badges de oferta, novedad y más vendidos.
+- Precios reales (COP). Badge 'Usado' (condición Excelente 10/10, batería 100%, garantía 6 meses).
 
 ## Ficha de producto: galería, lightbox y selector de colores
 
