@@ -2258,10 +2258,11 @@ function starsHTML(r){ const filled = Math.round(r || 0); return '<span class="s
 function badgeHTML(p){ if (!p.badge) return ''; const cls = p.badge === 'Nuevo' ? 'badge-new' : p.badge === 'Oferta' ? 'badge-offer' : p.badge === 'Usado' ? 'badge-used' : 'badge-best'; return '<span class="badge ' + cls + '">' + esc(p.badge) + '</span>'; }
 function pcardHTML(p){
   const pct = p.compareAtPrice ? Math.round((1 - p.price / p.compareAtPrice) * 100) : 0;
+  const cardSrc = viewSrc(p, null, 'front');
   return `<article class="pcard">
     <a class="pcard-art" href="#/producto/${p.id}" aria-label="Ver ${esc(p.name)}">
       ${badgeHTML(p)}
-      ${p.img && hasImage(p.img) ? '<img class="pcard-img" src="' + p.img + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async">' : productArt(p, 'front')}
+      ${cardSrc ? '<img class="pcard-img" src="' + cardSrc + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async">' : productArt(p, 'front')}
     </a>
     <div class="pcard-body">
       <div class="pcard-brand">${esc(p.brand)}</div>
@@ -2712,7 +2713,7 @@ const IMAGE_MANIFEST = {
     colors: {}
   },
   'iphone-12': {
-    front: ['assets/catalogo/iphone-12-front-2-up-iphone-12-12-mini-frontal.jpg', 'assets/catalogo/iphone-12-front-nuevo-dise-o-de-bordes-planos-frontal.jpg'],
+    front: ['assets/catalogo/iphone-12-front-nuevo-dise-o-de-bordes-planos-frontal.jpg', 'assets/catalogo/iphone-12-front-2-up-iphone-12-12-mini-frontal.jpg'],
     back: ['assets/catalogo/iphone-12-back-color-individual-azul-trasera.jpg', 'assets/catalogo/iphone-12-back-color-individual-blanco-trasera.jpg', 'assets/catalogo/iphone-12-back-color-individual-negro-trasera.jpg', 'assets/catalogo/iphone-12-back-color-individual-product-red-trasera-extra.jpg', 'assets/catalogo/iphone-12-back-color-individual-verde-trasera-extra.jpg'],
     side: [], diagonal: [],
     colors: {
@@ -2749,7 +2750,7 @@ const IMAGE_MANIFEST = {
     side: [], diagonal: [], colors: {}
   },
   'iphone-14': {
-    front: ['assets/catalogo/iphone-14-front-hero-2-up-14-14-plus-frontal.jpg', 'assets/catalogo/iphone-14-front-hero-5-colores-frontal.jpg', 'assets/catalogo/iphone-14-front-color-individual-blue-extra.jpg', 'assets/catalogo/iphone-14-front-color-individual-midnight-negro.jpg', 'assets/catalogo/iphone-14-front-color-individual-product-red-extra.jpg', 'assets/catalogo/iphone-14-front-color-individual-purple-lila.jpg', 'assets/catalogo/iphone-14-front-color-individual-starlight-blanco.jpg'],
+    front: ['assets/catalogo/iphone-14-front-color-individual-midnight-negro.jpg', 'assets/catalogo/iphone-14-front-hero-2-up-14-14-plus-frontal.jpg', 'assets/catalogo/iphone-14-front-hero-5-colores-frontal.jpg', 'assets/catalogo/iphone-14-front-color-individual-blue-extra.jpg', 'assets/catalogo/iphone-14-front-color-individual-product-red-extra.jpg', 'assets/catalogo/iphone-14-front-color-individual-purple-lila.jpg', 'assets/catalogo/iphone-14-front-color-individual-starlight-blanco.jpg'],
     back: ['assets/catalogo/iphone-14-back-trasera-c-maras-nota-alojada-bajo-ruta-product-watch-en-el-cdn-de-apple.jpg'],
     side: [], diagonal: [],
     colors: {
@@ -2761,7 +2762,7 @@ const IMAGE_MANIFEST = {
     }
   },
   'iphone-14-plus': {
-    front: ['assets/catalogo/iphone-14-plus-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-14-plus-front-color-individual-midnight-negro.jpg', 'assets/catalogo/iphone-14-plus-front-color-individual-starlight-blanco.jpg'],
+    front: ['assets/catalogo/iphone-14-plus-front-color-individual-midnight-negro.jpg', 'assets/catalogo/iphone-14-plus-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-14-plus-front-color-individual-starlight-blanco.jpg'],
     back: ['assets/catalogo/iphone-14-plus-back-trasera-c-maras-compartido.jpg'],
     side: [], diagonal: [],
     colors: {
@@ -2770,7 +2771,7 @@ const IMAGE_MANIFEST = {
     }
   },
   'iphone-14-pro': {
-    front: ['assets/catalogo/iphone-14-pro-front-hero-2-up-14-pro-14-pro-max-frontal.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-deep-purple.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-gold.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-silver-blanco.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-space-black-negro.jpg'],
+    front: ['assets/catalogo/iphone-14-pro-front-color-individual-space-black-negro.jpg', 'assets/catalogo/iphone-14-pro-front-hero-2-up-14-pro-14-pro-max-frontal.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-deep-purple.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-gold.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-silver-blanco.jpg'],
     back: ['assets/catalogo/iphone-14-pro-back-trasera-c-maras-dynamic-island.jpg'],
     side: [], diagonal: [],
     colors: {
@@ -2781,7 +2782,7 @@ const IMAGE_MANIFEST = {
     }
   },
   'iphone-14-pro-max': {
-    front: ['assets/catalogo/iphone-14-pro-max-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-14-pro-max-front-color-individual-silver-blanco.jpg', 'assets/catalogo/iphone-14-pro-max-front-color-individual-space-black-negro.jpg'],
+    front: ['assets/catalogo/iphone-14-pro-max-front-color-individual-space-black-negro.jpg', 'assets/catalogo/iphone-14-pro-max-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-14-pro-max-front-color-individual-silver-blanco.jpg'],
     back: ['assets/catalogo/iphone-14-pro-max-back-trasera-c-maras-compartido.jpg'],
     side: [], diagonal: [],
     colors: {
@@ -2908,11 +2909,23 @@ function primaryViewFor(p, color){
 /* Entradas de galería (orden: trasera, frontal, lateral, diagonal) — solo vistas reales, sin vacías ni repetidas. */
 function galleryBuild(p){
   const color = pdpState.color;
+  const m = manifestFor(p);
   const entries = [];
   GALLERY_VIEWS.forEach(v => {
+    if (v.key === 'front') return;   /* frontal se expande abajo */
     const src = viewSrc(p, color, v.key);
     if (src) entries.push({ key: v.key, label: v.label, src, isColor: viewIsColor(p, color, v.key) });
   });
+  /* frontal: principal (individual / color) + secundarias (2-up/lineup y demás) */
+  const frontPrimary = viewSrc(p, color, 'front');
+  if (frontPrimary) entries.push({ key: 'front', label: 'Vista frontal', src: frontPrimary, isColor: viewIsColor(p, color, 'front') });
+  if (m && m.front){
+    m.front.forEach(s => {
+      if (!s) return;
+      if (entries.some(e => e.src === s)) return;   /* no repetir la principal */
+      entries.push({ key: 'front:' + s, label: 'Vista frontal', src: s, isColor: false });
+    });
+  }
   if (!entries.length && p && p.img && hasImage(p.img)){
     entries.push({ key: 'front', label: 'Vista frontal', src: p.img, isColor: false });
   }
@@ -2939,6 +2952,9 @@ function galleryMediaHTML(p, color, viewKey, opts){
   }
   return productArt(p, viewKey, color);
 }
+function galleryImgHTML(src, alt, lazy){
+  return `<img class="gal-img" src="${src}" alt="${esc(alt)}" ${lazy ? 'loading="lazy" ' : ''}decoding="async">`;
+}
 function renderGallery(p){
   if (!p) return;
   const color = pdpState.color;
@@ -2954,13 +2970,13 @@ function renderGallery(p){
   const thumbs = document.getElementById('galThumbs');
   if (main && mainEntry){
     main.innerHTML = badgeHTML(p) +
-      '<span class="gal-stage">' + galleryMediaHTML(p, color, mainEntry.key) + '</span>' +
+      '<span class="gal-stage">' + galleryImgHTML(mainEntry.src, mainEntry.label + ' — ' + p.name) + '</span>' +
       '<span class="gal-zoom" aria-hidden="true">🔍</span>';
   }
   if (thumbs){
     thumbs.innerHTML = entries.map(e => {
       const active = e.key === mainEntry.key;
-      return `<button type="button" class="${active ? 'active' : ''}" data-action="gal" data-payload="${e.key}" aria-label="${esc(e.label)} — ${esc(p.name)}" aria-pressed="${active}">${galleryMediaHTML(p, color, e.key, { lazy:true })}</button>`;
+      return `<button type="button" class="${active ? 'active' : ''}" data-action="gal" data-payload="${e.key}" aria-label="${esc(e.label)} — ${esc(p.name)}" aria-pressed="${active}">${galleryImgHTML(e.src, e.label + ' — ' + p.name + (e.isColor ? ' ' + color : ''), true)}</button>`;
     }).join('');
   }
 }
@@ -3109,7 +3125,7 @@ function openLightbox(p, startView){
   lightboxState.items = entries.map(e => ({
     view: e.key,
     label: (e.isColor ? color + ' · ' : '') + e.label,
-    html: galleryMediaHTML(p, color, e.key)
+    html: galleryImgHTML(e.src, (e.isColor ? color + ' · ' : '') + e.label + ' — ' + p.name)
   }));
   let idx = entries.findIndex(e => e.key === (startView || pdpState.variant));
   lightboxState.index = idx >= 0 ? idx : 0;
