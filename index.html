@@ -353,7 +353,7 @@ details.acc .acc-body ul{padding-left:18px;display:flex;flex-direction:column;ga
 /* ============================================================
    PÁGINA DE PRODUCTO
    ============================================================ */
-.pdp{display:grid;grid-template-columns:45% 55%;gap:48px;align-items:start}
+.pdp{display:grid;grid-template-columns:minmax(0,9fr) minmax(0,11fr);gap:48px;align-items:start}
 .gallery{position:sticky;top:88px;min-width:0}
 .gal-main{display:block;width:100%;margin:0;padding:0;font:inherit;color:inherit;text-align:inherit;background:radial-gradient(130% 130% at 50% 0%,#fff 35%,var(--line2));border:1px solid var(--line);border-radius:26px;position:relative;overflow:hidden;transition:box-shadow .3s;cursor:zoom-in}
 .gal-main:hover{box-shadow:var(--sh-md)}
@@ -1855,7 +1855,8 @@ function addToCart(pid, qty, opts){
     if (prod){
       const vs = variantsOf(prod.id);
       if (!vs.length) return { ok:false, msg:'Producto no encontrado' };
-      v = vs.slice().sort((a,b) => a.precio - b.precio)[0]; /* variante mas economica por defecto */
+      const inStock = vs.filter(x => x.stock > 0);
+      v = (inStock.length ? inStock : vs).slice().sort((a,b) => a.precio - b.precio)[0]; /* variante mas economica CON stock por defecto */
     }
   }
   if (!v) return { ok:false, msg:'Producto no encontrado' };
@@ -2737,7 +2738,10 @@ const IMAGE_MANIFEST = {
   'iphone-13': {
     front: ['assets/catalogo/iphone-13-front-individual-rosa-pink.webp', 'assets/catalogo/iphone-13-front-hero-2-up-13-13-mini-frontal.webp'],
     back: ['assets/catalogo/iphone-13-back-colores-traseras-apiladas.webp', 'assets/catalogo/iphone-13-back-dise-o-trasero-c-maras-diagonales.webp'],
-    side: [], diagonal: [], colors: {}
+    side: [], diagonal: [],
+    colors: {
+      rosado: { front: ['assets/catalogo/iphone-13-front-individual-rosa-pink.webp'] }
+    }
   },
   'iphone-13-pro': {
     front: ['assets/catalogo/iphone-13-pro-front-hero-2-up-13-pro-13-pro-max-frontal.webp', 'assets/catalogo/iphone-13-pro-front-closeup-azul-sierra-sierra-blue.webp'],
@@ -2793,7 +2797,10 @@ const IMAGE_MANIFEST = {
   'iphone-15': {
     front: ['assets/catalogo/iphone-15-front-individual-azul.webp', 'assets/catalogo/iphone-15-front-hero-2-up-15-15-plus-frontal.webp'],
     back: ['assets/catalogo/iphone-15-back-colores-traseras.webp', 'assets/catalogo/iphone-15-back-dise-o-trasero-vidrio-con-infusi-n-de-color.webp'],
-    side: [], diagonal: [], colors: {}
+    side: [], diagonal: [],
+    colors: {
+      azul: { front: ['assets/catalogo/iphone-15-front-individual-azul.webp'] }
+    }
   },
   'iphone-15-plus': {
     front: ['assets/catalogo/iphone-15-plus-front-hero-2-up-compartido.webp'],
@@ -2872,6 +2879,82 @@ Object.keys(IMAGE_MANIFEST).forEach(m => {
 ['iphone-17-pro-max','iphone-17-pro','iphone-17-air','iphone-16-pro-max','iphone-16-pro','iphone-16-plus','iphone-16','iphone-15-pro-max','iphone-15-pro','iphone-15-plus','iphone-15','iphone-14-pro-max','iphone-14-pro','iphone-14-plus','iphone-14','iphone-13-pro-max','iphone-13-pro','iphone-13','iphone-12-pro-max','iphone-12','iphone-11'].forEach(m => IMAGE_FILES.add('assets/catalogo/' + m + '.webp'));
 IMAGE_FILES.add('assets/catalogo/ipad-8a-generacion.webp');
 
+/* Fotos individuales NEUTRAS por modelo (un solo dispositivo, sin color específico).
+   Se usan como principal cuando el color seleccionado no tiene foto propia;
+   NUNCA se usa una compuesta/lineup como principal de una variante. */
+const NEUTRAL_MANIFEST = {
+  'ipad-8a-generacion': {
+    front: ['assets/catalogo/ipad-8a-generacion-front-frontal-con-smart-keyboard.webp']
+  },
+  'iphone-11': {
+    diagonal: ['assets/catalogo/iphone-11-diagonal-shot-de-resistencia-al-agua-ngulo-3-4-no-es-foto-de-cat-logo-limpia.webp']
+  },
+  'iphone-12': {
+    front: ['assets/catalogo/iphone-12-front-nuevo-dise-o-de-bordes-planos-frontal.webp']
+  },
+  'iphone-12-pro-max': {
+    back: ['assets/catalogo/iphone-12-pro-max-back-trasera-sistema-de-c-maras.webp']
+  },
+  'iphone-13': {
+    back: ['assets/catalogo/iphone-13-back-dise-o-trasero-c-maras-diagonales.webp']
+  },
+  'iphone-13-pro': {
+    back: ['assets/catalogo/iphone-13-pro-back-nuevo-sistema-de-c-maras-trasera.webp']
+  },
+  'iphone-13-pro-max': {
+    back: ['assets/catalogo/iphone-13-pro-max-back-nuevo-sistema-de-c-maras-trasera-imagen-compartida.webp']
+  },
+  'iphone-14': {
+    back: ['assets/catalogo/iphone-14-back-trasera-c-maras-nota-alojada-bajo-ruta-product-watch-en-el-cdn-de-apple.webp']
+  },
+  'iphone-14-plus': {
+    back: ['assets/catalogo/iphone-14-plus-back-trasera-c-maras-compartido.webp']
+  },
+  'iphone-14-pro': {
+    back: ['assets/catalogo/iphone-14-pro-back-trasera-c-maras-dynamic-island.webp']
+  },
+  'iphone-14-pro-max': {
+    back: ['assets/catalogo/iphone-14-pro-max-back-trasera-c-maras-compartido.webp']
+  },
+  'iphone-15': {
+    back: ['assets/catalogo/iphone-15-back-dise-o-trasero-vidrio-con-infusi-n-de-color.webp']
+  },
+  'iphone-15-plus': {
+    back: ['assets/catalogo/iphone-15-plus-back-dise-o-trasero-compartido.webp']
+  },
+  'iphone-15-pro': {
+    front: ['assets/catalogo/iphone-15-pro-front-individual-n-a-closeup.webp'],
+    back: ['assets/catalogo/iphone-15-pro-back-dise-o-titanio-trasera-alojada-en-art-culo-del-iphone-15.webp', 'assets/catalogo/iphone-15-pro-back-sistema-de-c-maras-trasera.webp']
+  },
+  'iphone-15-pro-max': {
+    front: ['assets/catalogo/iphone-15-pro-max-front-closeup-n-a-closeup.webp'],
+    back: ['assets/catalogo/iphone-15-pro-max-back-dise-o-titanio-compartido.webp', 'assets/catalogo/iphone-15-pro-max-back-sistema-de-c-maras-compartido.webp']
+  },
+  'iphone-16': {},
+  'iphone-16-plus': {},
+  'iphone-16-pro': {
+    front: ['assets/catalogo/iphone-16-pro-front-closeup-n-a-closeup.webp'],
+    back: ['assets/catalogo/iphone-16-pro-back-sistema-de-c-maras-trasera.webp']
+  },
+  'iphone-16-pro-max': {
+    back: ['assets/catalogo/iphone-16-pro-max-back-sistema-de-c-maras-compartido.webp']
+  },
+  'iphone-17-air': {
+    front: ['assets/catalogo/iphone-17-air-front-hero-individual-frontal.webp'],
+    side: ['assets/catalogo/iphone-17-air-side-perfil-lateral-delgadez-nico-ngulo-lateral-oficial.webp']
+  },
+  'iphone-17': {
+    front: ['assets/catalogo/iphone-17-front-hero-individual-frontal.webp']
+  },
+  'iphone-17-pro': {
+    front: ['assets/catalogo/iphone-17-pro-front-closeup-n-a-closeup.webp'],
+    back: ['assets/catalogo/iphone-17-pro-back-c-mara-primer-plano-trasero.webp']
+  },
+  'iphone-17-pro-max': {
+    back: ['assets/catalogo/iphone-17-pro-max-back-c-mara-compartido.webp']
+  }
+};
+
 function imgSlug(s){ return norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
 function hasImage(src){ return IMAGE_FILES.has(src); }
 function manifestFor(p){ return p ? IMAGE_MANIFEST[imgSlug(p.name)] : null; }
@@ -2880,12 +2963,17 @@ function colorEntryFor(p, color){
   if (!m || !m.colors || !color) return null;
   return m.colors[imgSlug(color)] || null;
 }
-/* Imagen real para (producto, color, vista): foto específica del color > foto del modelo. */
+/* Imagen real para (producto, color, vista): foto específica del color > individual NEUTRA > placeholder.
+   NUNCA una compuesta/lineup como principal de una variante (con o sin color). */
+function neutralSrc(p, view){
+  const nm = NEUTRAL_MANIFEST[imgSlug((p && p.name) || '')] || {};
+  return (nm[view] && nm[view][0]) || null;
+}
 function viewSrc(p, color, view){
-  const m = manifestFor(p);
   const c = colorEntryFor(p, color);
   if (c && c[view] && c[view].length) return c[view][0];
-  if (m && m[view] && m[view].length) return m[view][0];
+  const n = neutralSrc(p, view);
+  if (n) return n;
   if (view === 'front' && p.img && hasImage(p.img)) return p.img;
   return null;
 }
@@ -3360,7 +3448,7 @@ function renderConfirmacion(main){
   const waMsg = 'Hola UltraCell! Hice el pedido ' + esc(order.id) + '.\\n\\nProductos:\\n' +
     order.items.map(l => {
       const p = productById(l.productId) || {name:'Producto'};
-      return '- ' + esc(p.name) + ' x' + l.qty + ' — ' + fmtCOP(l.price * l.qty);
+      return '- ' + esc(p.name) + ' ' + esc(l.storage) + ' ' + esc(l.color) + ' x' + l.qty + ' — ' + fmtCOP(l.price * l.qty);
     }).join('\\n') +
     '\\n\\nTotal: ' + fmtCOP(order.totals.total) + '. Quiero confirmar disponibilidad y entrada.';
   main.innerHTML = `<div class="container page confirm-wrap">
