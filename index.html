@@ -2768,48 +2768,237 @@ const pdpState = { variant:'front', color:null, storage:null, qty:1 };
    GALERÍA — vistas, variantes por color y nomenclatura de imágenes
    ============================================================ */
 const GALLERY_VIEWS = [
-  { key:'front',  label:'Vista frontal' },
-  { key:'back',   label:'Vista trasera' },
-  { key:'side',   label:'Vista lateral' },
-  { key:'camera', label:'Detalle de cámaras' }
+  { key:'back',     label:'Vista trasera' },
+  { key:'front',    label:'Vista frontal' },
+  { key:'side',     label:'Vista lateral' },
+  { key:'diagonal', label:'Vista diagonal' }
 ];
-/* Manifiesto de imágenes reales por color/vista (las provee el Director).
-   Nomenclatura: assets/catalogo/<modelo>-<color>-<vista>.webp
-   Solo se renderiza <img> para los archivos listados aquí; el resto usa el render SVG paramétrico.
-   Ejemplo a descomentar cuando exista el archivo:
-   IMAGE_MANIFEST.add('assets/catalogo/iphone-16-titanio-azul-front.webp');
-*/
-const IMAGE_MANIFEST = new Set([
-  'assets/catalogo/iphone-17-pro-max.jpg',
-  'assets/catalogo/iphone-17-pro.jpg',
-  'assets/catalogo/iphone-17-air.jpg',
-  'assets/catalogo/iphone-16-pro-max.jpg',
-  'assets/catalogo/iphone-16-pro.jpg',
-  'assets/catalogo/iphone-16-plus.jpg',
-  'assets/catalogo/iphone-16.jpg',
-  'assets/catalogo/iphone-15-pro-max.jpg',
-  'assets/catalogo/iphone-15-pro.jpg',
-  'assets/catalogo/iphone-15-plus.jpg',
-  'assets/catalogo/iphone-15.jpg',
-  'assets/catalogo/iphone-14-pro-max.jpg',
-  'assets/catalogo/iphone-14-pro.jpg',
-  'assets/catalogo/iphone-14-plus.jpg',
-  'assets/catalogo/iphone-14.jpg',
-  'assets/catalogo/iphone-13-pro-max.jpg',
-  'assets/catalogo/iphone-13-pro.jpg',
-  'assets/catalogo/iphone-13.jpg',
-  'assets/catalogo/iphone-12-pro-max.jpg',
-  'assets/catalogo/iphone-12.jpg',
-  'assets/catalogo/iphone-11.jpg',
-  'assets/catalogo/ipad-8a-generacion.png'
-]);
+/* ============================================================
+   BIBLIOTECA DE FOTOS REALES APROBADAS (87 imágenes · Apple Newsroom)
+   Estructura por modelo -> { front, back, side, diagonal } y, además, por color
+   (clave normalizada vía imgSlug) cuando el nombre de archivo lo indica.
+   Rutas relativas a la raíz del sitio (desplegado en GitHub Pages).
+   ============================================================ */
+const IMAGE_MANIFEST = {
+  'ipad-8a-generacion': {
+    front: ['assets/catalogo/ipad-8a-generacion-front-frontal-con-smart-keyboard.jpg', 'assets/catalogo/ipad-8a-generacion-front-lineup-frontal.jpg'],
+    back: ['assets/catalogo/ipad-8a-generacion-back-colores-silver-space-gray-gold.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-11': {
+    front: ['assets/catalogo/iphone-11-front-lineup-frontal-de-la-familia-iphone-11-6-colores.jpg'],
+    back: ['assets/catalogo/iphone-11-back-roseta-de-los-6-colores-vistas-traseras.jpg'],
+    side: [],
+    diagonal: ['assets/catalogo/iphone-11-diagonal-shot-de-resistencia-al-agua-ngulo-3-4-no-es-foto-de-cat-logo-limpia.jpg'],
+    colors: {}
+  },
+  'iphone-12': {
+    front: ['assets/catalogo/iphone-12-front-2-up-iphone-12-12-mini-frontal.jpg', 'assets/catalogo/iphone-12-front-nuevo-dise-o-de-bordes-planos-frontal.jpg'],
+    back: ['assets/catalogo/iphone-12-back-color-individual-azul-trasera.jpg', 'assets/catalogo/iphone-12-back-color-individual-blanco-trasera.jpg', 'assets/catalogo/iphone-12-back-color-individual-negro-trasera.jpg', 'assets/catalogo/iphone-12-back-color-individual-product-red-trasera-extra.jpg', 'assets/catalogo/iphone-12-back-color-individual-verde-trasera-extra.jpg'],
+    side: [], diagonal: [],
+    colors: {
+      azul:   { back: ['assets/catalogo/iphone-12-back-color-individual-azul-trasera.jpg'] },
+      blanco: { back: ['assets/catalogo/iphone-12-back-color-individual-blanco-trasera.jpg'] },
+      negro:  { back: ['assets/catalogo/iphone-12-back-color-individual-negro-trasera.jpg'] },
+      rojo:   { back: ['assets/catalogo/iphone-12-back-color-individual-product-red-trasera-extra.jpg'] },
+      verde:  { back: ['assets/catalogo/iphone-12-back-color-individual-verde-trasera-extra.jpg'] }
+    }
+  },
+  'iphone-12-pro-max': {
+    front: ['assets/catalogo/iphone-12-pro-max-front-hero-2-up-12-pro-12-pro-max-frontal.jpg'],
+    back: ['assets/catalogo/iphone-12-pro-max-back-trasera-sistema-de-c-maras.jpg'],
+    side: [],
+    diagonal: ['assets/catalogo/iphone-12-pro-max-diagonal-color-individual-gold-detalle-banda-de-acero-3-4.jpg', 'assets/catalogo/iphone-12-pro-max-diagonal-color-individual-pacific-blue-azul-vista-3-4.jpg'],
+    colors: {
+      azul: { diagonal: ['assets/catalogo/iphone-12-pro-max-diagonal-color-individual-pacific-blue-azul-vista-3-4.jpg'] },
+      oro:  { diagonal: ['assets/catalogo/iphone-12-pro-max-diagonal-color-individual-gold-detalle-banda-de-acero-3-4.jpg'] }
+    }
+  },
+  'iphone-13': {
+    front: ['assets/catalogo/iphone-13-front-hero-2-up-13-13-mini-frontal.jpg'],
+    back: ['assets/catalogo/iphone-13-back-colores-traseras-apiladas.jpg', 'assets/catalogo/iphone-13-back-dise-o-trasero-c-maras-diagonales.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-13-pro': {
+    front: ['assets/catalogo/iphone-13-pro-front-hero-2-up-13-pro-13-pro-max-frontal.jpg'],
+    back: ['assets/catalogo/iphone-13-pro-back-colores-traseras.jpg', 'assets/catalogo/iphone-13-pro-back-nuevo-sistema-de-c-maras-trasera.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-13-pro-max': {
+    front: ['assets/catalogo/iphone-13-pro-max-front-hero-2-up-13-pro-13-pro-max-frontal-imagen-compartida.jpg'],
+    back: ['assets/catalogo/iphone-13-pro-max-back-colores-traseras-imagen-compartida.jpg', 'assets/catalogo/iphone-13-pro-max-back-nuevo-sistema-de-c-maras-trasera-imagen-compartida.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-14': {
+    front: ['assets/catalogo/iphone-14-front-hero-2-up-14-14-plus-frontal.jpg', 'assets/catalogo/iphone-14-front-hero-5-colores-frontal.jpg', 'assets/catalogo/iphone-14-front-color-individual-blue-extra.jpg', 'assets/catalogo/iphone-14-front-color-individual-midnight-negro.jpg', 'assets/catalogo/iphone-14-front-color-individual-product-red-extra.jpg', 'assets/catalogo/iphone-14-front-color-individual-purple-lila.jpg', 'assets/catalogo/iphone-14-front-color-individual-starlight-blanco.jpg'],
+    back: ['assets/catalogo/iphone-14-back-trasera-c-maras-nota-alojada-bajo-ruta-product-watch-en-el-cdn-de-apple.jpg'],
+    side: [], diagonal: [],
+    colors: {
+      blanco: { front: ['assets/catalogo/iphone-14-front-color-individual-starlight-blanco.jpg'] },
+      lila:   { front: ['assets/catalogo/iphone-14-front-color-individual-purple-lila.jpg'] },
+      negro:  { front: ['assets/catalogo/iphone-14-front-color-individual-midnight-negro.jpg'] },
+      azul:   { front: ['assets/catalogo/iphone-14-front-color-individual-blue-extra.jpg'] },
+      rojo:   { front: ['assets/catalogo/iphone-14-front-color-individual-product-red-extra.jpg'] }
+    }
+  },
+  'iphone-14-plus': {
+    front: ['assets/catalogo/iphone-14-plus-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-14-plus-front-color-individual-midnight-negro.jpg', 'assets/catalogo/iphone-14-plus-front-color-individual-starlight-blanco.jpg'],
+    back: ['assets/catalogo/iphone-14-plus-back-trasera-c-maras-compartido.jpg'],
+    side: [], diagonal: [],
+    colors: {
+      negro:  { front: ['assets/catalogo/iphone-14-plus-front-color-individual-midnight-negro.jpg'] },
+      blanco: { front: ['assets/catalogo/iphone-14-plus-front-color-individual-starlight-blanco.jpg'] }
+    }
+  },
+  'iphone-14-pro': {
+    front: ['assets/catalogo/iphone-14-pro-front-hero-2-up-14-pro-14-pro-max-frontal.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-deep-purple.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-gold.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-silver-blanco.jpg', 'assets/catalogo/iphone-14-pro-front-color-individual-space-black-negro.jpg'],
+    back: ['assets/catalogo/iphone-14-pro-back-trasera-c-maras-dynamic-island.jpg'],
+    side: [], diagonal: [],
+    colors: {
+      morado: { front: ['assets/catalogo/iphone-14-pro-front-color-individual-deep-purple.jpg'] },
+      oro:    { front: ['assets/catalogo/iphone-14-pro-front-color-individual-gold.jpg'] },
+      blanco: { front: ['assets/catalogo/iphone-14-pro-front-color-individual-silver-blanco.jpg'] },
+      negro:  { front: ['assets/catalogo/iphone-14-pro-front-color-individual-space-black-negro.jpg'] }
+    }
+  },
+  'iphone-14-pro-max': {
+    front: ['assets/catalogo/iphone-14-pro-max-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-14-pro-max-front-color-individual-silver-blanco.jpg', 'assets/catalogo/iphone-14-pro-max-front-color-individual-space-black-negro.jpg'],
+    back: ['assets/catalogo/iphone-14-pro-max-back-trasera-c-maras-compartido.jpg'],
+    side: [], diagonal: [],
+    colors: {
+      blanco: { front: ['assets/catalogo/iphone-14-pro-max-front-color-individual-silver-blanco.jpg'] },
+      negro:  { front: ['assets/catalogo/iphone-14-pro-max-front-color-individual-space-black-negro.jpg'] }
+    }
+  },
+  'iphone-15': {
+    front: ['assets/catalogo/iphone-15-front-hero-2-up-15-15-plus-frontal.jpg'],
+    back: ['assets/catalogo/iphone-15-back-colores-traseras.jpg', 'assets/catalogo/iphone-15-back-dise-o-trasero-vidrio-con-infusi-n-de-color.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-15-plus': {
+    front: ['assets/catalogo/iphone-15-plus-front-hero-2-up-compartido.jpg'],
+    back: ['assets/catalogo/iphone-15-plus-back-colores-compartido.jpg', 'assets/catalogo/iphone-15-plus-back-dise-o-trasero-compartido.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-15-pro': {
+    front: ['assets/catalogo/iphone-15-pro-front-hero-2-up-15-pro-15-pro-max-frontal.jpg'],
+    back: ['assets/catalogo/iphone-15-pro-back-colores-titanio-traseras.jpg', 'assets/catalogo/iphone-15-pro-back-dise-o-titanio-trasera-alojada-en-art-culo-del-iphone-15.jpg', 'assets/catalogo/iphone-15-pro-back-sistema-de-c-maras-trasera.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-15-pro-max': {
+    front: ['assets/catalogo/iphone-15-pro-max-front-hero-2-up-compartido.jpg'],
+    back: ['assets/catalogo/iphone-15-pro-max-back-colores-titanio-compartido.jpg', 'assets/catalogo/iphone-15-pro-max-back-dise-o-titanio-compartido.jpg', 'assets/catalogo/iphone-15-pro-max-back-sistema-de-c-maras-compartido.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-16': {
+    front: ['assets/catalogo/iphone-16-front-hero-2-up-16-16-plus-frontal.jpg', 'assets/catalogo/iphone-16-front-lineup-frontal.jpg'],
+    back: ['assets/catalogo/iphone-16-back-acabados-colores-traseras.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-16-plus': {
+    front: ['assets/catalogo/iphone-16-plus-front-hero-2-up-compartido.jpg', 'assets/catalogo/iphone-16-plus-front-lineup-compartido.jpg'],
+    back: ['assets/catalogo/iphone-16-plus-back-acabados-colores-compartido.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-16-pro': {
+    front: ['assets/catalogo/iphone-16-pro-front-hero-2-up-16-pro-16-pro-max-frontal.jpg'],
+    back: ['assets/catalogo/iphone-16-pro-back-acabados-titanio-traseras.jpg', 'assets/catalogo/iphone-16-pro-back-sistema-de-c-maras-trasera.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-16-pro-max': {
+    front: ['assets/catalogo/iphone-16-pro-max-front-hero-2-up-compartido.jpg'],
+    back: ['assets/catalogo/iphone-16-pro-max-back-acabados-titanio-compartido.jpg', 'assets/catalogo/iphone-16-pro-max-back-sistema-de-c-maras-compartido.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-17-air': {
+    front: ['assets/catalogo/iphone-17-air-front-hero-individual-frontal.jpg', 'assets/catalogo/iphone-17-air-front-lineup-familia-frontal.jpg'],
+    back: ['assets/catalogo/iphone-17-air-back-colores-traseras.jpg'],
+    side: ['assets/catalogo/iphone-17-air-side-perfil-lateral-delgadez-nico-ngulo-lateral-oficial.jpg'],
+    diagonal: [], colors: {}
+  },
+  'iphone-17': {
+    front: ['assets/catalogo/iphone-17-front-hero-individual-frontal.jpg', 'assets/catalogo/iphone-17-front-lineup-frontal.jpg'],
+    back: ['assets/catalogo/iphone-17-back-colores-traseras.jpg'],
+    side: [], diagonal: [], colors: {}
+  },
+  'iphone-17-pro': {
+    front: ['assets/catalogo/iphone-17-pro-front-lineup-de-colores-frontal.jpg'],
+    back: ['assets/catalogo/iphone-17-pro-back-c-mara-primer-plano-trasero.jpg'],
+    side: [],
+    diagonal: ['assets/catalogo/iphone-17-pro-diagonal-color-individual-cosmic-orange-vista-3-4.jpg'],
+    colors: {
+      naranja: { diagonal: ['assets/catalogo/iphone-17-pro-diagonal-color-individual-cosmic-orange-vista-3-4.jpg'] }
+    }
+  },
+  'iphone-17-pro-max': {
+    front: ['assets/catalogo/iphone-17-pro-max-front-lineup-de-colores-compartido.jpg'],
+    back: ['assets/catalogo/iphone-17-pro-max-back-c-mara-compartido.jpg'],
+    side: [],
+    diagonal: ['assets/catalogo/iphone-17-pro-max-diagonal-color-individual-cosmic-orange-compartido.jpg'],
+    colors: {
+      naranja: { diagonal: ['assets/catalogo/iphone-17-pro-max-diagonal-color-individual-cosmic-orange-compartido.jpg'] }
+    }
+  }
+};
+/* Set plano de TODOS los archivos reales (placeholders de catálogo + 87 fotos aprobadas)
+   para hasImage(). */
+const IMAGE_FILES = new Set();
+Object.keys(IMAGE_MANIFEST).forEach(m => {
+  ['front','back','side','diagonal'].forEach(v => (IMAGE_MANIFEST[m][v]||[]).forEach(s => IMAGE_FILES.add(s)));
+  Object.keys(IMAGE_MANIFEST[m].colors||{}).forEach(c => {
+    ['front','back','side','diagonal'].forEach(v => (IMAGE_MANIFEST[m].colors[c][v]||[]).forEach(s => IMAGE_FILES.add(s)));
+  });
+});
+['iphone-17-pro-max','iphone-17-pro','iphone-17-air','iphone-16-pro-max','iphone-16-pro','iphone-16-plus','iphone-16','iphone-15-pro-max','iphone-15-pro','iphone-15-plus','iphone-15','iphone-14-pro-max','iphone-14-pro','iphone-14-plus','iphone-14','iphone-13-pro-max','iphone-13-pro','iphone-13','iphone-12-pro-max','iphone-12','iphone-11'].forEach(m => IMAGE_FILES.add('assets/catalogo/' + m + '.jpg'));
+IMAGE_FILES.add('assets/catalogo/ipad-8a-generacion.png');
+
 function imgSlug(s){ return norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
-function variantImageSrc(p, color, viewKey){
-  const model = imgSlug(p.name || '');
-  const cslug = imgSlug(color || '');
-  return 'assets/catalogo/' + model + '-' + cslug + '-' + viewKey + '.webp';
+function hasImage(src){ return IMAGE_FILES.has(src); }
+function manifestFor(p){ return p ? IMAGE_MANIFEST[imgSlug(p.name)] : null; }
+function colorEntryFor(p, color){
+  const m = manifestFor(p);
+  if (!m || !m.colors || !color) return null;
+  return m.colors[imgSlug(color)] || null;
 }
-function hasImage(src){ return IMAGE_MANIFEST.has(src); }
+/* Imagen real para (producto, color, vista): foto específica del color > foto del modelo. */
+function viewSrc(p, color, view){
+  const m = manifestFor(p);
+  const c = colorEntryFor(p, color);
+  if (c && c[view] && c[view].length) return c[view][0];
+  if (m && m[view] && m[view].length) return m[view][0];
+  if (view === 'front' && p.img && hasImage(p.img)) return p.img;
+  return null;
+}
+function viewIsColor(p, color, view){
+  const c = colorEntryFor(p, color);
+  return !!(c && c[view] && c[view].length);
+}
+function colorHasPhoto(p, color){
+  const c = colorEntryFor(p, color);
+  return !!(c && ['front','back','side','diagonal'].some(v => c[v] && c[v].length));
+}
+/* Vista "primaria" para un color: la vista donde ese color tiene foto específica,
+   o 'front' si no tiene (se mantiene la foto válida del modelo + aviso). */
+function primaryViewFor(p, color){
+  const c = colorEntryFor(p, color);
+  if (c){
+    for (const v of GALLERY_VIEWS) if (c[v.key] && c[v.key].length) return v.key;
+  }
+  return 'front';
+}
+/* Entradas de galería (orden: trasera, frontal, lateral, diagonal) — solo vistas reales, sin vacías ni repetidas. */
+function galleryBuild(p){
+  const color = pdpState.color;
+  const entries = [];
+  GALLERY_VIEWS.forEach(v => {
+    const src = viewSrc(p, color, v.key);
+    if (src) entries.push({ key: v.key, label: v.label, src, isColor: viewIsColor(p, color, v.key) });
+  });
+  if (!entries.length && p && p.img && hasImage(p.img)){
+    entries.push({ key: 'front', label: 'Vista frontal', src: p.img, isColor: false });
+  }
+  return entries;
+}
 /* Modelo de variantes por color (derivado de colors[] + PAL, sin duplicar productos) */
 function productVariants(p){
   return (p.colors || []).map(color => {
@@ -2817,29 +3006,16 @@ function productVariants(p){
     return {
       color,
       colorCode: pl ? pl.hex[0] : '#ccc',
-      colorGrad: pl ? 'linear-gradient(135deg,' + pl.hex[0] + ',' + pl.hex[1] + ')' : '#ccc',
-      images: {
-        front: variantImageSrc(p, color, 'front'),
-        back: variantImageSrc(p, color, 'back'),
-        side: variantImageSrc(p, color, 'side'),
-        camera: variantImageSrc(p, color, 'camera')
-      }
+      colorGrad: pl ? 'linear-gradient(135deg,' + pl.hex[0] + ',' + pl.hex[1] + ')' : '#ccc'
     };
   });
-}
-function productViews(p){
-  const phoneLike = ['phone','iphone','iphone-pro','android'].indexOf(p.art) >= 0;
-  return phoneLike ? GALLERY_VIEWS : GALLERY_VIEWS.slice(0, 2);
 }
 function galleryMediaHTML(p, color, viewKey, opts){
   opts = opts || {};
   const view = GALLERY_VIEWS.find(v => v.key === viewKey) || { key: viewKey, label: viewKey };
   const alt = esc((view.label || viewKey) + ' — ' + (p.name || '') + (color ? ' ' + color : ''));
-  if (viewKey === 'front' && p.img && hasImage(p.img)){
-    return `<img class="gal-img" src="${p.img}" alt="${alt}" ${opts.lazy ? 'loading="lazy" ' : ''}decoding="async">`;
-  }
-  const src = variantImageSrc(p, color, viewKey);
-  if (hasImage(src)){
+  const src = viewSrc(p, color, viewKey);
+  if (src){
     return `<img class="gal-img" src="${src}" alt="${alt}" ${opts.lazy ? 'loading="lazy" ' : ''}decoding="async">`;
   }
   return productArt(p, viewKey, color);
@@ -2847,20 +3023,44 @@ function galleryMediaHTML(p, color, viewKey, opts){
 function renderGallery(p){
   if (!p) return;
   const color = pdpState.color;
-  const views = productViews(p);
-  if (!pdpState.variant || !views.some(v => v.key === pdpState.variant)) pdpState.variant = views[0].key;
+  const entries = galleryBuild(p);
+  let mainKey = pdpState.variant;
+  if (!entries.some(e => e.key === mainKey)){
+    mainKey = primaryViewFor(p, color);
+    if (!entries.some(e => e.key === mainKey)) mainKey = entries[0] ? entries[0].key : 'front';
+    pdpState.variant = mainKey;
+  }
+  const mainEntry = entries.find(e => e.key === mainKey) || entries[0];
   const main = document.getElementById('galMain');
   const thumbs = document.getElementById('galThumbs');
-  if (main){
+  if (main && mainEntry){
     main.innerHTML = badgeHTML(p) +
-      '<span class="gal-stage">' + galleryMediaHTML(p, color, pdpState.variant) + '</span>' +
+      '<span class="gal-stage">' + galleryMediaHTML(p, color, mainEntry.key) + '</span>' +
       '<span class="gal-zoom" aria-hidden="true">🔍</span>';
   }
   if (thumbs){
-    thumbs.innerHTML = views.map(v => {
-      const active = v.key === pdpState.variant;
-      return `<button type="button" class="${active ? 'active' : ''}" data-action="gal" data-payload="${v.key}" aria-label="${esc(v.label)} — ${esc(p.name)}" aria-pressed="${active}">${galleryMediaHTML(p, color, v.key, { lazy:true })}</button>`;
+    thumbs.innerHTML = entries.map(e => {
+      const active = e.key === mainEntry.key;
+      return `<button type="button" class="${active ? 'active' : ''}" data-action="gal" data-payload="${e.key}" aria-label="${esc(e.label)} — ${esc(p.name)}" aria-pressed="${active}">${galleryMediaHTML(p, color, e.key, { lazy:true })}</button>`;
     }).join('');
+  }
+}
+function colorNoticeHTML(p){
+  const color = pdpState.color || '';
+  const waMsg = 'Hola, quiero confirmar disponibilidad del ' + p.name + ' en color ' + color + '.';
+  const askMsg = '¿Tienes disponible el ' + p.name + ' en color ' + color + '?';
+  return `<span aria-hidden="true">💬</span><span>¿Buscas este color? Confirma disponibilidad por <a href="#" data-action="wa" data-msg="${esc(waMsg)}" style="color:var(--accent);font-weight:600">WhatsApp</a> o pregúntale a nuestro <a href="#" data-action="open-chat" data-ask="${esc(askMsg)}" style="color:var(--accent);font-weight:600">asesor IA</a>.</span>`;
+}
+function renderColorNotice(){
+  const p = UC_CTX.product;
+  const el = document.getElementById('colorNotice');
+  if (!el || !p) return;
+  if (!colorHasPhoto(p, pdpState.color)){
+    el.innerHTML = colorNoticeHTML(p);
+    el.style.display = 'flex';
+  } else {
+    el.innerHTML = '';
+    el.style.display = 'none';
   }
 }
 function renderProduct(main, id){
@@ -2874,8 +3074,8 @@ function renderProduct(main, id){
     return;
   }
   UC_CTX.product = p;
-  pdpState.variant = 'front';
   pdpState.color = p.colors && p.colors[0] ? p.colors[0] : null;
+  pdpState.variant = pdpState.color ? primaryViewFor(p, pdpState.color) : 'front';
   pdpState.storage = p.storage !== '—' ? p.storage : null;
   pdpState.qty = 1;
   track('product_view', { product: p.id, name: p.name, price: p.price });
@@ -2913,7 +3113,8 @@ function renderProduct(main, id){
             <div class="color-grid">${productVariants(p).map(v => {
               const active = v.color === pdpState.color;
               return `<button type="button" class="color-opt ${active ? 'active' : ''}" data-action="pcolor" data-payload="${esc(v.color)}" aria-pressed="${active}" aria-label="Color ${esc(v.color)}" title="${esc(v.color)}"><span class="color-dot" style="background:${v.colorGrad}"></span><span class="color-name">${esc(v.color)}</span></button>`;
-            }).join('')}</div></div>` : ''}
+            }).join('')}</div>
+            <div class="color-notice" id="colorNotice" style="display:none;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px;color:var(--muted);line-height:1.45"></div></div>` : ''}
           ${hasStorage ? `<div class="opt-block"><h5>Capacidad: <span>${esc(pdpState.storage)}</span></h5>
             <div class="opt-row">${p.storageOptions.map(s => `<button class="opt-pill ${s === pdpState.storage ? 'active' : ''}" data-action="pstorage" data-payload="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>` : ''}
           <div class="opt-block">
@@ -2969,6 +3170,7 @@ function renderProduct(main, id){
     </div>
   </div>`;
   renderGallery(p);
+  renderColorNotice();
 }
 function pdpRefreshArt(){
   const p = UC_CTX.product;
@@ -2980,13 +3182,13 @@ const lightboxState = { items:[], index:0, open:false };
 function openLightbox(p, startView){
   if (!p) return;
   const color = pdpState.color;
-  const views = productViews(p);
-  lightboxState.items = views.map(v => ({
-    view: v.key,
-    label: (color ? color + ' · ' : '') + v.label,
-    html: galleryMediaHTML(p, color, v.key)
+  const entries = galleryBuild(p);
+  lightboxState.items = entries.map(e => ({
+    view: e.key,
+    label: (e.isColor ? color + ' · ' : '') + e.label,
+    html: galleryMediaHTML(p, color, e.key)
   }));
-  let idx = views.findIndex(v => v.key === (startView || pdpState.variant));
+  let idx = entries.findIndex(e => e.key === (startView || pdpState.variant));
   lightboxState.index = idx >= 0 ? idx : 0;
   renderLightbox();
   lightboxState.open = true;
@@ -3515,10 +3717,13 @@ function handleAction(action, el){
       else pdpState.qty = Math.max(pdpState.qty - 1, 1);
       pdpRefreshQty(); break;
     }
-    case 'pcolor': { pdpState.color = payload; pdpRefreshArt();
+    case 'pcolor': { pdpState.color = payload;
+      pdpState.variant = primaryViewFor(UC_CTX.product, payload);
+      pdpRefreshArt();
       document.querySelectorAll('.color-opt').forEach(s => s.classList.toggle('active', s.dataset.payload === payload));
       document.querySelectorAll('.color-opt').forEach(s => s.setAttribute('aria-pressed', s.dataset.payload === payload ? 'true' : 'false'));
       const lab = document.querySelector('.opt-block h5 span'); if (lab) lab.textContent = payload;
+      renderColorNotice();
       break; }
     case 'pstorage': { pdpState.storage = payload;
       document.querySelectorAll('.opt-pill').forEach(s => s.classList.toggle('active', s.dataset.payload === payload));
