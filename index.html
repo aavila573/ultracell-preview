@@ -209,17 +209,15 @@ h1,h2,h3,h4{letter-spacing:-.02em;color:var(--ink);line-height:1.15;font-weight:
 .hero-glow{position:absolute;width:min(380px,72%);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(192,13,32,.35),transparent 65%);filter:blur(30px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;animation:floatGlow 7s ease-in-out infinite}
 @keyframes floatGlow{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.06)}}
 .hero-phone{position:relative;z-index:2;animation:floaty 6.5s ease-in-out infinite}
-.hero-phone.main{width:clamp(230px,62%,400px)}
-.hero-phone.main img{display:block;width:100%;height:auto;object-fit:contain;border-radius:24px;background:#fff;filter:drop-shadow(0 36px 58px rgba(0,0,0,.5))}
-.hero-phone.back{z-index:1;position:absolute;left:5%;bottom:13%;width:clamp(150px,40%,280px);opacity:.96;animation:floatyBack 7.5s ease-in-out infinite}
-.hero-phone.back img{display:block;width:100%;height:auto;object-fit:contain;border-radius:20px;background:#fff;filter:drop-shadow(0 24px 38px rgba(0,0,0,.45))}
-@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(0deg)}}
-@keyframes floatyBack{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-14px) rotate(-6deg)}}
+.hero-phone svg{display:block;width:clamp(200px,24vw,300px);height:auto;filter:drop-shadow(0 40px 60px rgba(0,0,0,.55))}
+.hero-phone.back{z-index:1;position:absolute;right:8%;top:10%;opacity:.9;animation:floatyBack 7.5s ease-in-out infinite}
+.hero-phone.back svg{display:block;width:clamp(150px,18vw,240px);height:auto;filter:drop-shadow(0 30px 44px rgba(0,0,0,.45))}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-14px) rotate(-3deg)}}
+@keyframes floatyBack{0%,100%{transform:translateY(0) rotate(8deg)}50%{transform:translateY(-16px) rotate(6deg)}}
 .hero-chip{position:absolute;z-index:3;background:rgba(22,22,30,.85);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px 14px;font-size:13px;color:rgba(255,255,255,.85);box-shadow:var(--sh-lg);animation:chipFloat 5.5s ease-in-out infinite;max-width:min(240px,46%)}
 .hero-chip b{display:block;font-size:15px;color:#fff}
-.hero-chip.chip-price-main{right:5%;bottom:20%}
-.hero-chip.chip-price-second{left:3%;bottom:6%}
-.hero-chip.chip-ai{right:4%;top:12%;display:flex;align-items:center;gap:8px}
+.hero-chip.chip-price{left:4%;bottom:12%}
+.hero-chip.chip-ai{right:4%;top:14%;display:flex;align-items:center;gap:8px}
 .hero-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
 @keyframes chipFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 /* ---------- barra de confianza ---------- */
@@ -762,7 +760,7 @@ details.acc .acc-body ul{padding-left:18px;display:flex;flex-direction:column;ga
   .trust-grid{grid-template-columns:1fr;padding:18px 16px;gap:4px}
   .hero h1{font-size:36px}
   .hero-art{min-height:340px}
-  .hero-phone.main{width:clamp(210px,86%,340px)}
+  .hero-phone svg{width:clamp(170px,60vw,230px)}
   .hero-phone.back{display:none}
   .hero-chip,.hero-chip.chip-ai{display:none}
   .quiz-head,.quiz-body{padding-left:20px;padding-right:20px}
@@ -2474,10 +2472,9 @@ function renderHome(main){
       </div>
       <div class="hero-art" id="heroArt">
         <div class="hero-glow"></div>
-        <div class="hero-phone back"><img src="assets/catalogo/iphone-16-pro-max.jpg" alt="iPhone 16 Pro Max" decoding="async"></div>
-        <div class="hero-phone main"><img src="assets/catalogo/iphone-17-pro-max.jpg" alt="iPhone 17 Pro Max" decoding="async"></div>
-        <div class="hero-chip chip-price chip-price-main">iPhone 17 Pro Max<b>${fmtCOP(3750000)} </b></div>
-        <div class="hero-chip chip-price chip-price-second">iPhone 16 Pro Max<b>${fmtCOP(2850000)} </b></div>
+        <div class="hero-phone back">${heroPhoneArt(CATALOG.find(p => p.id === 'iphone-16'), 'front', 'Rosa')}</div>
+        <div class="hero-phone">${heroPhoneArt(CATALOG.find(p => p.id === 'iphone-17-pro-max'), 'front')}</div>
+        <div class="hero-chip chip-price">iPhone 17 Pro Max<b>${fmtCOP(3750000)} </b></div>
         <div class="hero-chip chip-ai"><span class="dot"></span> UltraCell IA en línea — <b>¡pregúntale!</b></div>
       </div>
     </div>
