@@ -238,7 +238,7 @@ h1,h2,h3,h4{letter-spacing:-.02em;color:var(--ink);line-height:1.15;font-weight:
 .pcard:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:#dcdce4}
 .pcard-art{position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 50% 0%,#fff 30%,var(--line2));padding:26px 18px 20px;overflow:hidden}
 .pcard-art svg{width:132px;height:auto;transition:transform .4s cubic-bezier(.2,.7,.3,1)}
-.pcard-art img{width:132px;height:auto;object-fit:contain;transition:transform .4s cubic-bezier(.2,.7,.3,1)}
+.pcard-art img{width:132px;aspect-ratio:4/5;object-fit:contain;object-position:center;transition:transform .4s cubic-bezier(.2,.7,.3,1)}
 .pcard:hover .pcard-art svg{transform:scale(1.06) translateY(-3px)}
 .pcard:hover .pcard-art img{transform:scale(1.06) translateY(-3px)}
 .pcard .badge{position:absolute;top:14px;left:14px;z-index:2;box-shadow:var(--sh-sm)}
@@ -2259,7 +2259,7 @@ function starsHTML(r){ const filled = Math.round(r || 0); return '<span class="s
 function badgeHTML(p){ if (!p.badge) return ''; const cls = p.badge === 'Nuevo' ? 'badge-new' : p.badge === 'Oferta' ? 'badge-offer' : p.badge === 'Usado' ? 'badge-used' : 'badge-best'; return '<span class="badge ' + cls + '">' + esc(p.badge) + '</span>'; }
 function pcardHTML(p){
   const pct = p.compareAtPrice ? Math.round((1 - p.price / p.compareAtPrice) * 100) : 0;
-  const cardSrc = viewSrc(p, null, 'front');
+  const cardSrc = cardPhoto(p);
   return `<article class="pcard">
     <a class="pcard-art" href="#/producto/${p.id}" aria-label="Ver ${esc(p.name)}">
       ${badgeHTML(p)}
@@ -2879,6 +2879,47 @@ Object.keys(IMAGE_MANIFEST).forEach(m => {
 ['iphone-17-pro-max','iphone-17-pro','iphone-17-air','iphone-16-pro-max','iphone-16-pro','iphone-16-plus','iphone-16','iphone-15-pro-max','iphone-15-pro','iphone-15-plus','iphone-15','iphone-14-pro-max','iphone-14-pro','iphone-14-plus','iphone-14','iphone-13-pro-max','iphone-13-pro','iphone-13','iphone-12-pro-max','iphone-12','iphone-11'].forEach(m => IMAGE_FILES.add('assets/catalogo/' + m + '.webp'));
 IMAGE_FILES.add('assets/catalogo/ipad-8a-generacion.webp');
 
+/* ============================================================
+   RENDERS INDIVIDUALES + FOTO INDIVIDUAL FOTOGRÁFICA (DEV-2026-052)
+   Tarjetas y principal de ficha: UN solo dispositivo del modelo exacto.
+   - Foto individual fotográfica cuando existe (INDIVIDUAL_PHOTO).
+   - Si no, render individual <modelo>-render.webp (preparado por el Director).
+   NUNCA una compuesta/lineup/2-up como tarjeta o principal.
+   ============================================================ */
+const RENDER_MODELS = ['iphone-11','iphone-12','iphone-12-pro-max','iphone-13','iphone-13-pro','iphone-13-pro-max','iphone-14','iphone-14-plus','iphone-14-pro','iphone-14-pro-max','iphone-15','iphone-15-plus','iphone-15-pro','iphone-15-pro-max','iphone-16','iphone-16-plus','iphone-16-pro','iphone-16-pro-max','iphone-17','iphone-17-air','iphone-17-pro','iphone-17-pro-max'];
+RENDER_MODELS.forEach(m => IMAGE_FILES.add('assets/catalogo/' + m + '-render.webp'));
+
+/* Foto individual FOTOGRÁFICA por modelo (un solo dispositivo completo). */
+const INDIVIDUAL_PHOTO = {
+  'ipad-8a-generacion': 'assets/catalogo/ipad-8a-generacion.webp',
+  'iphone-12': 'assets/catalogo/iphone-12-front-nuevo-dise-o-de-bordes-planos-frontal.webp',
+  'iphone-13': 'assets/catalogo/iphone-13-front-individual-rosa-pink.webp',
+  'iphone-14': 'assets/catalogo/iphone-14-front-color-individual-midnight-negro.webp',
+  'iphone-14-plus': 'assets/catalogo/iphone-14-plus-front-color-individual-midnight-negro.webp',
+  'iphone-14-pro': 'assets/catalogo/iphone-14-pro-front-color-individual-space-black-negro.webp',
+  'iphone-14-pro-max': 'assets/catalogo/iphone-14-pro-max-front-color-individual-space-black-negro.webp',
+  'iphone-15': 'assets/catalogo/iphone-15-front-individual-azul.webp',
+  'iphone-17-air': 'assets/catalogo/iphone-17-air-front-hero-individual-frontal.webp',
+  'iphone-17-pro': 'assets/catalogo/iphone-17-pro-front-individual-naranja-c-smico-cosmic-orange.webp'
+};
+function renderSrc(p){
+  const s = imgSlug((p && p.name) || '');
+  if (!s || s === 'ipad-8a-generacion') return null;
+  const r = 'assets/catalogo/' + s + '-render.webp';
+  return hasImage(r) ? r : null;
+}
+function isComposite(src){
+  return /(2-up|lineup|colores|roseta|familia|apiladas)/i.test(src || '');
+}
+/* Imagen de TARJETA de catálogo: individual fotográfica > render > fallback. */
+function cardPhoto(p){
+  const ind = INDIVIDUAL_PHOTO[imgSlug((p && p.name) || '')];
+  if (ind && hasImage(ind)) return ind;
+  const r = renderSrc(p);
+  if (r) return r;
+  return viewSrc(p, null, 'front');
+}
+
 /* Fotos individuales NEUTRAS por modelo (un solo dispositivo, sin color específico).
    Se usan como principal cuando el color seleccionado no tiene foto propia;
    NUNCA se usa una compuesta/lineup como principal de una variante. */
@@ -2972,9 +3013,16 @@ function neutralSrc(p, view){
 function viewSrc(p, color, view){
   const c = colorEntryFor(p, color);
   if (c && c[view] && c[view].length) return c[view][0];
+  if (view === 'front'){
+    const ind = INDIVIDUAL_PHOTO[imgSlug((p && p.name) || '')];
+    if (ind && hasImage(ind)) return ind;
+    const r = renderSrc(p);
+    if (r) return r;
+    if (p.img && hasImage(p.img)) return p.img;
+    return null;
+  }
   const n = neutralSrc(p, view);
   if (n) return n;
-  if (view === 'front' && p.img && hasImage(p.img)) return p.img;
   return null;
 }
 function viewIsColor(p, color, view){
@@ -3011,7 +3059,8 @@ function galleryBuild(p){
     m.front.forEach(s => {
       if (!s) return;
       if (entries.some(e => e.src === s)) return;   /* no repetir la principal */
-      entries.push({ key: 'front:' + s, label: 'Vista frontal', src: s, isColor: false });
+      const composite = isComposite(s);
+      entries.push({ key: 'front:' + s, label: composite ? 'Familia de colores' : 'Vista frontal', src: s, isColor: false });
     });
   }
   if (!entries.length && p && p.img && hasImage(p.img)){
