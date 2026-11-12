@@ -14,6 +14,7 @@
 <meta property="og:image:alt" content="UltraCell — Barranquilla">
 <meta name="theme-color" content="#c00d20">
 <link rel="icon" href="assets/logo.jpeg">
+<link rel="preload" as="image" href="assets/catalogo/hero-17pm-plata.webp">
 <link rel="canonical" href="https://ultracell.com.co/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -717,6 +718,9 @@ details.acc .acc-body ul{padding-left:18px;display:flex;flex-direction:column;ga
   .header-cta{font-size:12.5px;padding:0 12px}
   .grid-4{grid-template-columns:repeat(3,1fr)}
   .cart-layout,.checkout-layout{grid-template-columns:1fr 320px}
+  .catalog-layout{grid-template-columns:1fr}
+  .filters{display:none}
+  .filter-btn-mobile{display:inline-flex}
 }
 @media (max-width:980px){
   .main-nav{display:none}
@@ -733,9 +737,6 @@ details.acc .acc-body ul{padding-left:18px;display:flex;flex-direction:column;ga
   .trust-grid{grid-template-columns:repeat(2,1fr)}
   .grid-4{grid-template-columns:repeat(2,1fr)}
   .grid-3{grid-template-columns:repeat(2,1fr)}
-  .catalog-layout{grid-template-columns:1fr}
-  .filters{display:none}
-  .filter-btn-mobile{display:inline-flex}
   .pdp{grid-template-columns:1fr;gap:28px}
   .gallery{position:static}
   .gal-stage{height:320px}
@@ -813,7 +814,6 @@ details.acc .acc-body ul{padding-left:18px;display:flex;flex-direction:column;ga
       
       
       
-      <a href="#/catalogo?oferta=1" data-nav="ofertas">Ofertas</a>
       <a href="#/nosotros" data-nav="nosotros">Nosotros</a>
     </nav>
     <div class="header-actions">
@@ -846,7 +846,6 @@ details.acc .acc-body ul{padding-left:18px;display:flex;flex-direction:column;ga
     
     
     
-    <a href="#/catalogo?oferta=1">Ofertas</a>
     <a href="#/nosotros">Nosotros</a>
     <a href="#/faq">Preguntas frecuentes</a>
     <div class="mm-cta">
@@ -1957,11 +1956,11 @@ function sortList(list, sort){
    RECOMENDADOR — QUIZ (5 preguntas → 1 iPhone)
    ============================================================ */
 const QUIZ = [
-  { q:'¿Cuál es tu presupuesto?', opts:[ ['lt1','Menos de $1 millón','💰'], ['1_2','Entre $1 y $2 millones','💵'], ['2_3','Entre $2 y $3 millones','💎'], ['gt3','Más de $3 millones','👑'] ] },
-  { q:'¿Para qué lo vas a usar más?', opts:[ ['foto','Fotos y video','📸'], ['redes','Redes y mensajería','💬'], ['juegos','Juegos y rendimiento','🎮'], ['trabajo','Trabajo y productividad','💼'] ] },
-  { q:'¿Qué tan importante es la cámara?', opts:[ ['mucho','Es lo más importante','🌟'], ['algo','Buena, sin exagerar','👍'], ['poco','No me importa mucho','👌'] ] },
-  { q:'¿Cuánta capacidad necesitas?', opts:[ ['128','128 GB me sobra','🗂️'], ['256','256 GB','📦'], ['mas','Más de 256 GB','🛰️'] ] },
-  { q:'¿Qué tamaño prefieres?', opts:[ ['compacto','Compacto y liviano','🤏'], ['grande','Grande, para ver contenido','🖥️'], ['indif','No tengo preferencia','⚖️'] ] }
+  { key:'budget', q:'¿Cuál es tu presupuesto?', opts:[ ['lt1','Menos de $1 millón','💰'], ['1_2','Entre $1 y $2 millones','💵'], ['2_3','Entre $2 y $3 millones','💎'], ['gt3','Más de $3 millones','👑'] ] },
+  { key:'use', q:'¿Para qué lo vas a usar más?', opts:[ ['foto','Fotos y video','📸'], ['redes','Redes y mensajería','💬'], ['juegos','Juegos y rendimiento','🎮'], ['trabajo','Trabajo y productividad','💼'] ] },
+  { key:'cam', q:'¿Qué tan importante es la cámara?', opts:[ ['mucho','Es lo más importante','🌟'], ['algo','Buena, sin exagerar','👍'], ['poco','No me importa mucho','👌'] ] },
+  { key:'cap', q:'¿Cuánta capacidad necesitas?', opts:[ ['128','128 GB me sobra','🗂️'], ['256','256 GB','📦'], ['mas','Más de 256 GB','🛰️'] ] },
+  { key:'size', q:'¿Qué tamaño prefieres?', opts:[ ['compacto','Compacto y liviano','🤏'], ['grande','Grande, para ver contenido','🖥️'], ['indif','No tengo preferencia','⚖️'] ] }
 ];
 function recommendQuiz(answers){
   const phones = PRODUCTS.filter(p => p.category === 'iphone');
@@ -2420,16 +2419,6 @@ function renderHome(main){
         <div class="cat-art">${productArt(PRODUCTS.find(p => p.id === 'iphone-17-pro'), 'front')}</div>
         <h3>iPhone</h3><p>Los últimos modelos, listos para ti.</p>
         <span class="cat-go">Ver iPhone <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-      <a class="cat-card" href="#/catalogo?categoria=accesorios">
-        <div class="cat-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;margin:auto;color:var(--accent)"><path d="M6 9V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v5"/><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M9 14h6"/></svg></div>
-        <h3>Accesorios</h3><p>Fundas, cargadores y complementos.</p>
-        <span class="cat-go">Ver accesorios <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-      <a class="cat-card" href="#/catalogo?categoria=baterias">
-        <div class="cat-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;margin:auto;color:var(--accent)"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 10v4M9 10v4M12 10v4"/></svg></div>
-        <h3>Baterías</h3><p>Cambio de batería para todos los modelos.</p>
-        <span class="cat-go">Ver baterías <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
       <a class="cat-card" href="https://wa.me/573007527308?text=Hola%20UltraCell%2C%20necesito%20servicio%20técnico" target="_blank" rel="noopener">
         <div class="cat-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;margin:auto;color:var(--accent)"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
@@ -3504,8 +3493,8 @@ function renderConfirmacion(main){
     '\\n\\nTotal: ' + fmtCOP(order.totals.total) + '. Quiero confirmar disponibilidad y entrada.';
   main.innerHTML = `<div class="container page confirm-wrap">
     <div class="confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg></div>
-    <h1>¡Compra realizada! 🎉</h1>
-    <p class="c-sub">Gracias por comprar en UltraCell. Te enviamos los detalles a tu correo y WhatsApp.</p>
+    <h1>Pedido enviado por WhatsApp</h1>
+    <p class="c-sub">Te contactaremos para confirmar disponibilidad y pago.</p>
     <div class="order-num">🧾 ${esc(order.id)}</div>
     <div class="order-card">
       <h3>Detalle del pedido <span class="status"><i></i> ${esc(order.status)}</span></h3>
@@ -3520,7 +3509,7 @@ function renderConfirmacion(main){
       <div class="oc-rows" style="margin-top:12px">
         <div><span>Subtotal</span><b>${fmtCOP(order.totals.sub)}</b></div>
         <div><span>Envío</span><b>${order.totals.ship === 0 ? 'Gratis' : fmtCOP(order.totals.ship)}</b></div>
-        <div><span>Total pagado</span><b style="font-size:17px">${fmtCOP(order.totals.total)}</b></div>
+        <div><span>Total</span><b style="font-size:17px">${fmtCOP(order.totals.total)}</b></div>
       </div>
     </div>
     <div class="order-card">
@@ -3822,8 +3811,9 @@ function handleAction(action, el){
     case 'wa': waClick(el.dataset.msg || null); break;
     case 'goto': navigate(payload); break;
     case 'quiz-option': {
-      quizState.answers[el.dataset.q] = el.dataset.a;
-      quizState.step = +el.dataset.q + 1;
+      const qi = +el.dataset.q;
+      quizState.answers[QUIZ[qi].key] = el.dataset.a;
+      quizState.step = qi + 1;
       const box = document.getElementById('quizBody');
       if (box) renderQuiz(box);
       break;
