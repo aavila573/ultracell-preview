@@ -2839,7 +2839,8 @@ const IMAGE_MANIFEST = {
     side: [],
     diagonal: ['assets/catalogo/iphone-17-pro-diagonal-color-individual-cosmic-orange-vista-3-4.webp'],
     colors: {
-      naranja: { diagonal: ['assets/catalogo/iphone-17-pro-diagonal-color-individual-cosmic-orange-vista-3-4.webp'] }
+      naranja: { diagonal: ['assets/catalogo/iphone-17-pro-diagonal-color-individual-cosmic-orange-vista-3-4.webp'] },
+      blanco: { front: ['assets/catalogo/iphone-17-pro-color-silver.webp'] }
     }
   },
   'iphone-17-pro-max': {
@@ -2848,7 +2849,8 @@ const IMAGE_MANIFEST = {
     side: [],
     diagonal: ['assets/catalogo/iphone-17-pro-max-diagonal-color-individual-cosmic-orange-compartido.webp'],
     colors: {
-      naranja: { diagonal: ['assets/catalogo/iphone-17-pro-max-diagonal-color-individual-cosmic-orange-compartido.webp'] }
+      naranja: { diagonal: ['assets/catalogo/iphone-17-pro-max-diagonal-color-individual-cosmic-orange-compartido.webp'] },
+      blanco: { front: ['assets/catalogo/iphone-17-pro-max-color-silver.webp'] }
     }
   }
 };
@@ -2868,7 +2870,9 @@ IMAGE_FILES.add('assets/catalogo/ipad-8a-generacion.webp');
    RENDERS INDIVIDUALES + FOTO INDIVIDUAL FOTOGRÁFICA (DEV-2026-052 / 053)
    - TARJETA (DEV-2026-053): SIEMPRE render individual <modelo>-render.webp
      (iPad: ipad-8a-generacion.webp). Consistencia total estilo Apple Store.
-   - PRINCIPAL DE FICHA: color con foto > foto individual fotográfica > render.
+   - PRINCIPAL DE FICHA: color con foto en colors{} > render neutro
+     <modelo>-render.webp. La individual fotográfica de color solo se muestra
+     al elegir ESE color o como miniatura de galería (NUNCA como neutra).
    NUNCA una compuesta/lineup/2-up como tarjeta o principal.
    ============================================================ */
 const RENDER_MODELS = ['iphone-11','iphone-12','iphone-12-pro-max','iphone-13','iphone-13-pro','iphone-13-pro-max','iphone-14','iphone-14-plus','iphone-14-pro','iphone-14-pro-max','iphone-15','iphone-15-plus','iphone-15-pro','iphone-15-pro-max','iphone-16','iphone-16-plus','iphone-16-pro','iphone-16-pro-max','iphone-17','iphone-17-air','iphone-17-pro','iphone-17-pro-max'];
@@ -2991,7 +2995,8 @@ function colorEntryFor(p, color){
   if (!m || !m.colors || !color) return null;
   return m.colors[imgSlug(color)] || null;
 }
-/* Imagen real para (producto, color, vista): foto específica del color > individual NEUTRA > placeholder.
+/* Imagen real para (producto, color, vista): foto específica del color > render neutro
+   (si el color no tiene foto) > individual NEUTRA (solo iPad, sin render) > placeholder.
    NUNCA una compuesta/lineup como principal de una variante (con o sin color). */
 function neutralSrc(p, view){
   const nm = NEUTRAL_MANIFEST[imgSlug((p && p.name) || '')] || {};
@@ -3001,10 +3006,10 @@ function viewSrc(p, color, view){
   const c = colorEntryFor(p, color);
   if (c && c[view] && c[view].length) return c[view][0];
   if (view === 'front'){
-    const ind = INDIVIDUAL_PHOTO[imgSlug((p && p.name) || '')];
-    if (ind && hasImage(ind)) return ind;
     const r = renderSrc(p);
     if (r) return r;
+    const ind = INDIVIDUAL_PHOTO[imgSlug((p && p.name) || '')];
+    if (ind && hasImage(ind)) return ind;
     if (p.img && hasImage(p.img)) return p.img;
     return null;
   }
