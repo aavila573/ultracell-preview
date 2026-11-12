@@ -142,7 +142,7 @@ Todo el contenido está en `index.html`. El catálogo se edita en los arrays `PR
 
 ### Responsive
 
-Diseño mobile-first con breakpoints en **1120px**, **980px**, **640px** y **400px**. El sidebar de filtros del catálogo se colapsa desde 1120px (botón de filtros móvil) para evitar solape del badge `Usado` con la imagen en anchos intermedios. Sin scroll horizontal ni solapes en 360, 768, 1024, 1120 y 1280 px.
+Diseño mobile-first con breakpoints en **1180px**, **1120px**, **980px**, **640px** y **400px**. El sidebar de filtros del catálogo se colapsa desde 1180px (botón de filtros móvil) y las imágenes de tarjeta usan 118px de ancho, de modo que el badge `Usado` nunca se solapa con la imagen en ningún ancho. Sin scroll horizontal ni solapes verificados con CDP en 390, 768, 1024, 1121, 1150, 1180, 1366 y 1920 px (catálogo y home).
 
 ### Paleta de colores
 
