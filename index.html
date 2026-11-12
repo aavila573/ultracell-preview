@@ -236,9 +236,9 @@ h1,h2,h3,h4{letter-spacing:-.02em;color:var(--ink);line-height:1.15;font-weight:
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .pcard{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.2,.7,.3,1),box-shadow .3s;position:relative}
 .pcard:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:#dcdce4}
-.pcard-art{position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 50% 0%,#fff 30%,var(--line2));padding:26px 18px 20px;overflow:hidden}
+.pcard-art{position:relative;display:flex;align-items:center;justify-content:center;background:#fff;padding:26px 18px 20px;overflow:hidden}
 .pcard-art svg{width:132px;height:auto;transition:transform .4s cubic-bezier(.2,.7,.3,1)}
-.pcard-art img{width:132px;aspect-ratio:4/5;object-fit:contain;object-position:center;transition:transform .4s cubic-bezier(.2,.7,.3,1)}
+.pcard-art img{width:132px;aspect-ratio:1/2;object-fit:contain;object-position:center;transition:transform .4s cubic-bezier(.2,.7,.3,1)}
 .pcard:hover .pcard-art svg{transform:scale(1.06) translateY(-3px)}
 .pcard:hover .pcard-art img{transform:scale(1.06) translateY(-3px)}
 .pcard .badge{position:absolute;top:14px;left:14px;z-index:2;box-shadow:var(--sh-sm)}
@@ -2880,10 +2880,10 @@ Object.keys(IMAGE_MANIFEST).forEach(m => {
 IMAGE_FILES.add('assets/catalogo/ipad-8a-generacion.webp');
 
 /* ============================================================
-   RENDERS INDIVIDUALES + FOTO INDIVIDUAL FOTOGRÁFICA (DEV-2026-052)
-   Tarjetas y principal de ficha: UN solo dispositivo del modelo exacto.
-   - Foto individual fotográfica cuando existe (INDIVIDUAL_PHOTO).
-   - Si no, render individual <modelo>-render.webp (preparado por el Director).
+   RENDERS INDIVIDUALES + FOTO INDIVIDUAL FOTOGRÁFICA (DEV-2026-052 / 053)
+   - TARJETA (DEV-2026-053): SIEMPRE render individual <modelo>-render.webp
+     (iPad: ipad-8a-generacion.webp). Consistencia total estilo Apple Store.
+   - PRINCIPAL DE FICHA: color con foto > foto individual fotográfica > render.
    NUNCA una compuesta/lineup/2-up como tarjeta o principal.
    ============================================================ */
 const RENDER_MODELS = ['iphone-11','iphone-12','iphone-12-pro-max','iphone-13','iphone-13-pro','iphone-13-pro-max','iphone-14','iphone-14-plus','iphone-14-pro','iphone-14-pro-max','iphone-15','iphone-15-plus','iphone-15-pro','iphone-15-pro-max','iphone-16','iphone-16-plus','iphone-16-pro','iphone-16-pro-max','iphone-17','iphone-17-air','iphone-17-pro','iphone-17-pro-max'];
@@ -2911,12 +2911,14 @@ function renderSrc(p){
 function isComposite(src){
   return /(2-up|lineup|colores|roseta|familia|apiladas)/i.test(src || '');
 }
-/* Imagen de TARJETA de catálogo: individual fotográfica > render > fallback. */
+/* Imagen de TARJETA de catálogo: render individual SIEMPRE (<modelo>-render.webp) > individual fotográfica (solo iPad) > fallback.
+   Consistencia total estilo Apple Store (DEV-2026-053): las tarjetas usan el render oficial del modelo;
+   las fotos fotográficas quedan SOLO en la galería de la ficha. */
 function cardPhoto(p){
-  const ind = INDIVIDUAL_PHOTO[imgSlug((p && p.name) || '')];
-  if (ind && hasImage(ind)) return ind;
   const r = renderSrc(p);
   if (r) return r;
+  const ind = INDIVIDUAL_PHOTO[imgSlug((p && p.name) || '')];
+  if (ind && hasImage(ind)) return ind;
   return viewSrc(p, null, 'front');
 }
 
