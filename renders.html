@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Renders oficiales con transparencia — UltraCell</title>
+<style>
+  :root{--rojo:#E31B23;--gris:#2B2D2F;--negro:#111}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,"Segoe UI",Roboto,sans-serif;background:#F7F8FA;color:var(--negro);padding:32px 20px 80px}
+
+  h1{font-size:26px;margin-bottom:6px}
+  .sub{color:#5A5F66;font-size:14px;margin-bottom:8px}
+  .meta{display:inline-block;background:#FFF;border:1px solid #E3E6EB;border-radius:8px;padding:8px 14px;font-size:13px;color:#5A5F66;margin-bottom:28px}
+
+  h2{font-size:17px;margin:36px 0 4px;padding-bottom:8px;border-bottom:2px solid var(--rojo);display:inline-block}
+  .nota{font-size:13px;color:#6B7280;margin-bottom:16px}
+
+  /* --- Fila de comparacion de fondos --- */
+  .fondos{display:flex;gap:0;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 3px 14px rgba(0,0,0,.09)}
+  .fondo{flex:1;display:flex;align-items:center;justify-content:center;padding:26px 14px;min-height:250px;position:relative}
+  .fondo.blanco{background:#FFF}
+  .fondo.rojo{background:linear-gradient(160deg,#E8232B,#C0121A)}
+  .fondo.navy{background:linear-gradient(160deg,#141B2E,#0B1226)}
+  .fondo.gris{background:#EDEFF3}
+  .fondo img{max-width:100%;max-height:198px;object-fit:contain;display:block}
+  .fondo .tag{position:absolute;top:8px;left:10px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;opacity:.65}
+  .fondo.blanco .tag,.fondo.gris .tag{color:#8A9099}
+  .fondo.rojo .tag,.fondo.navy .tag{color:#FFF}
+
+  /* --- Grilla de renders --- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:16px;margin-bottom:8px}
+  .card{background:#FFF;border:1px solid #E3E6EB;border-radius:12px;overflow:hidden;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.12);border-color:#CBD2DA}
+  .card .thumb{height:172px;display:flex;align-items:center;justify-content:center;background:
+     repeating-conic-gradient(#F4F5F7 0% 25%, #FFFFFF 0% 50%) 50%/16px 16px;
+     padding:12px}
+  .card .thumb img{max-width:100%;max-height:100%;object-fit:contain}
+  .card .info{padding:9px 12px 11px;border-top:1px solid #EFF1F4}
+  .card .nom{font-size:13px;font-weight:600;line-height:1.25}
+  .card .col{font-size:11.5px;color:#79818C;margin-top:2px}
+  .card .file{font-size:10px;color:#A8AFB8;margin-top:5px;font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+  .card.falta{opacity:.5;background:#FAFAFB}
+  .card.falta .thumb{color:#B0B6BE;font-size:12px;text-align:center;padding:20px}
+
+  .aviso{background:#FFF8E6;border-left:4px solid #E8A33D;padding:14px 18px;border-radius:8px;font-size:13.5px;line-height:1.55;margin:26px 0}
+  .aviso b{color:#8A5A00}
+  .ok{background:#EDF9F1;border-left:4px solid #22A85A;padding:14px 18px;border-radius:8px;font-size:13.5px;line-height:1.55;margin:26px 0}
+</style>
+</head>
+<body>
+
+<h1>Renders oficiales con transparencia</h1>
+<div class="sub">Biblioteca de producto Apple para UltraCell · verificada</div>
+<div class="meta">30 renders · 900px · WebP con alpha · 1.6 MB total</div>
+
+<h2>La prueba clave: el mismo render sobre 4 fondos</h2>
+<div class="nota">Si tiene transparencia real, se monta sobre cualquier color sin recortar nada.</div>
+<div class="fondos">
+  <div class="fondo blanco"><span class="tag">Blanco</span><img src="assets/renders-alpha/iphone-16-black.webp" alt="iPhone 16 negro"></div>
+  <div class="fondo rojo"><span class="tag">Rojo marca</span><img src="assets/renders-alpha/iphone-16-black.webp" alt=""></div>
+  <div class="fondo navy"><span class="tag">Navy oscuro</span><img src="assets/renders-alpha/iphone-16-black.webp" alt=""></div>
+  <div class="fondo gris"><span class="tag">Gris</span><img src="assets/renders-alpha/iphone-16-black.webp" alt=""></div>
+</div>
+
+<div class="ok">
+  <b>Esto es lo que cambia para ti:</b> con estas imágenes <b>no hay que recortar ni quitar fondos</b>.
+  Ya vienen transparentes, en alta resolución y con el producto correcto. Se usan directamente.
+</div>
+
+<h2>iPhone 12</h2>
+<div class="grid">
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-12-black.webp" alt=""></div><div class="info"><div class="nom">iPhone 12</div><div class="col">Negro</div><div class="file">iphone-12-black.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-12-white.webp" alt=""></div><div class="info"><div class="nom">iPhone 12</div><div class="col">Blanco</div><div class="file">iphone-12-white.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-12-blue.webp" alt=""></div><div class="info"><div class="nom">iPhone 12</div><div class="col">Azul</div><div class="file">iphone-12-blue.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-12-green.webp" alt=""></div><div class="info"><div class="nom">iPhone 12</div><div class="col">Verde</div><div class="file">iphone-12-green.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-12-red.webp" alt=""></div><div class="info"><div class="nom">iPhone 12</div><div class="col">Rojo</div><div class="file">iphone-12-red.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-12-purple.webp" alt=""></div><div class="info"><div class="nom">iPhone 12</div><div class="col">Morado</div><div class="file">iphone-12-purple.webp</div></div></div>
+</div>
+
+<h2>iPhone 13</h2>
+<div class="grid">
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-13-midnight.webp" alt=""></div><div class="info"><div class="nom">iPhone 13</div><div class="col">Medianoche</div><div class="file">iphone-13-midnight.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-13-starlight.webp" alt=""></div><div class="info"><div class="nom">iPhone 13</div><div class="col">Blanco estrella</div><div class="file">iphone-13-starlight.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-13-blue.webp" alt=""></div><div class="info"><div class="nom">iPhone 13</div><div class="col">Azul</div><div class="file">iphone-13-blue.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-13-pink.webp" alt=""></div><div class="info"><div class="nom">iPhone 13</div><div class="col">Rosado</div><div class="file">iphone-13-pink.webp</div></div></div>
+</div>
+
+<h2>iPhone 14</h2>
+<div class="grid">
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-14-midnight.webp" alt=""></div><div class="info"><div class="nom">iPhone 14</div><div class="col">Medianoche</div><div class="file">iphone-14-midnight.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-14-starlight.webp" alt=""></div><div class="info"><div class="nom">iPhone 14</div><div class="col">Blanco estrella</div><div class="file">iphone-14-starlight.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-14-blue.webp" alt=""></div><div class="info"><div class="nom">iPhone 14</div><div class="col">Azul</div><div class="file">iphone-14-blue.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-14-purple.webp" alt=""></div><div class="info"><div class="nom">iPhone 14</div><div class="col">Morado</div><div class="file">iphone-14-purple.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-14-red.webp" alt=""></div><div class="info"><div class="nom">iPhone 14</div><div class="col">Rojo</div><div class="file">iphone-14-red.webp</div></div></div>
+</div>
+
+<h2>iPhone 15</h2>
+<div class="grid">
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-15-black.webp" alt=""></div><div class="info"><div class="nom">iPhone 15</div><div class="col">Negro</div><div class="file">iphone-15-black.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-15-blue.webp" alt=""></div><div class="info"><div class="nom">iPhone 15</div><div class="col">Azul</div><div class="file">iphone-15-blue.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-15-green.webp" alt=""></div><div class="info"><div class="nom">iPhone 15</div><div class="col">Verde</div><div class="file">iphone-15-green.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-15-pink.webp" alt=""></div><div class="info"><div class="nom">iPhone 15</div><div class="col">Rosado</div><div class="file">iphone-15-pink.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-15-yellow.webp" alt=""></div><div class="info"><div class="nom">iPhone 15</div><div class="col">Amarillo</div><div class="file">iphone-15-yellow.webp</div></div></div>
+</div>
+
+<h2>iPhone 16</h2>
+<div class="grid">
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-black.webp" alt=""></div><div class="info"><div class="nom">iPhone 16</div><div class="col">Negro</div><div class="file">iphone-16-black.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-white.webp" alt=""></div><div class="info"><div class="nom">iPhone 16</div><div class="col">Blanco</div><div class="file">iphone-16-white.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-pink.webp" alt=""></div><div class="info"><div class="nom">iPhone 16</div><div class="col">Rosado</div><div class="file">iphone-16-pink.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-teal.webp" alt=""></div><div class="info"><div class="nom">iPhone 16</div><div class="col">Verde azulado</div><div class="file">iphone-16-teal.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-ultramarine.webp" alt=""></div><div class="info"><div class="nom">iPhone 16</div><div class="col">Azul ultramarino</div><div class="file">iphone-16-ultramarine.webp</div></div></div>
+</div>
+
+<h2>iPhone 16 Plus</h2>
+<div class="grid">
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-plus-black.webp" alt=""></div><div class="info"><div class="nom">iPhone 16 Plus</div><div class="col">Negro</div><div class="file">iphone-16-plus-black.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-plus-white.webp" alt=""></div><div class="info"><div class="nom">iPhone 16 Plus</div><div class="col">Blanco</div><div class="file">iphone-16-plus-white.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-plus-pink.webp" alt=""></div><div class="info"><div class="nom">iPhone 16 Plus</div><div class="col">Rosado</div><div class="file">iphone-16-plus-pink.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-plus-teal.webp" alt=""></div><div class="info"><div class="nom">iPhone 16 Plus</div><div class="col">Verde azulado</div><div class="file">iphone-16-plus-teal.webp</div></div></div>
+  <div class="card"><div class="thumb"><img src="assets/renders-alpha/iphone-16-plus-ultramarine.webp" alt=""></div><div class="info"><div class="nom">iPhone 16 Plus</div><div class="col">Azul ultramarino</div><div class="file">iphone-16-plus-ultramarine.webp</div></div></div>
+</div>
+
+<div class="aviso">
+  <b>Lo que falta y por qué:</b> iPhone Pro y Pro Max (13, 14, 15, 16, 17) no están.
+  Apple no expone esas imágenes por la ruta pública que sí funciona para los modelos base.
+  Probé 13 variantes de URL por modelo y todas fallaron. Para los Pro hoy solo hay el
+  close-up de cámara del catálogo, o foto real del inventario.
+</div>
+
+</body>
+</html>
