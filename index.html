@@ -1887,6 +1887,54 @@ function removeLine(lineIdx){
   track('remove_from_cart', { product: removed && removed.id });
   return true;
 }
+/* ============================================================
+   SUPABASE — registro de pedido (fire-and-forget, no bloquea)
+   ============================================================ */
+const SUPABASE_URL = 'https://ogxiluhzzwifuymxatjt.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9neGlsdWh6endpZnV5bXhhdGp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNTgyMDgsImV4cCI6MjEwODYzNDIwOH0.sQpe51Hj_TtWWKL4tHCwh4KVenCML0jyxHEqfMWffoI';
+function registrarPedidoSupabase(order){
+  /* Registra el pedido en Supabase (tabla ultracell_orders) sin bloquear
+     el flujo: si falla (sin red / timeout / tabla ausente), solo se loguea
+     en consola y el checkout/WhatsApp continúa normal. */
+  if (typeof fetch === 'undefined' || !order) return;
+  try {
+    const body = {
+      numero: order.id,
+      items: (order.items || []).map(l => ({
+        modelo: l.name,
+        capacidad: l.storage,
+        color: l.color,
+        precio: l.price,
+        cantidad: l.qty,
+        varianteId: l.id
+      })),
+      total: order.totals ? order.totals.total : 0,
+      cliente: {
+        nombre: (((order.customer && order.customer.nombre) || '') + ' ' + ((order.customer && order.customer.apellido) || '')).trim(),
+        telefono: (order.customer && order.customer.tel) || '',
+        direccion: [order.customer && order.customer.direccion, order.customer && order.customer.complemento, order.customer && order.customer.ciudad, order.customer && order.customer.depto].filter(Boolean).join(', '),
+        notas: [(order.customer && order.customer.email ? 'Email: ' + order.customer.email : ''), 'Pago: ' + ((order.payment && order.payment.label) || '')].filter(Boolean).join(' · ')
+      },
+      estado: 'nuevo'
+    };
+    fetch(SUPABASE_URL + '/rest/v1/ultracell_orders', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(body)
+    }).then(function(res){
+      if (!res.ok) console.warn('[UltraCell] Pedido ' + body.numero + ' no se registró en Supabase (HTTP ' + res.status + ').');
+    }).catch(function(err){
+      console.warn('[UltraCell] Fallo de red registrando el pedido ' + body.numero + ' en Supabase (offline/timeout).', err && err.message);
+    });
+  } catch (e) {
+    console.warn('[UltraCell] Error inesperado registrando el pedido en Supabase.', e && e.message);
+  }
+}
 function placeOrder(form, method){
   const cart = getCart();
   if (!cart.length) return { ok:false, msg:'El carrito está vacío' };
@@ -1907,6 +1955,7 @@ function placeOrder(form, method){
   sSet('uc_orders_v1', orders);
   sSet('uc_last_order', order);
   saveCart([]);
+  registrarPedidoSupabase(order);   /* POST fire-and-forget a Supabase: no bloquea el checkout */
   track('payment_success', { order: order.id, total: totals.total, method });
   return { ok:true, order };
 }
